@@ -53,14 +53,13 @@ class JsonStorage implements StorageInterface
             return null;
         }
 
-        $results = [];
-        foreach ($todoList as $index => $item) {
-            if (isset($item[$key]) && $item[$key] === $value) {
-                $results[] = $item;
+        foreach ($todoList as $item) {
+            if (isset($item[$key]) && $item[$key] == $value) {
+                return $item;
             }
         }
 
-        return $results;
+        return null;
     }
     public function delete(int $index)
     {

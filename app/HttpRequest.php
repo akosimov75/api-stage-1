@@ -20,9 +20,18 @@ class HttpRequest
     {
         $this->method = HttpMethods::from($_SERVER['REQUEST_METHOD']);
         $this->uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        parse_str(file_get_contents("php://input"),$put_body);
-        $this->body =  $put_body ?: $_POST;
+
+        $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+
+        if (strpos($contentType, 'application/json') !== false) {
+            $json = file_get_contents('php://input');
+            $this->body = json_decode($json, true);
+        } else {
+            parse_str(file_get_contents("php://input"), $formData);
+            $this->body = $formData ?: $_POST;
+        }
     }
+
 
     /**
      * @return string
@@ -63,4 +72,6 @@ class HttpRequest
     {
         $this->params = $params;
     }
+
+
 }

@@ -5,6 +5,8 @@ use App\Controllers\TodoController;
 use App\Repositories\TodoRepository;
 use App\Storage\JsonStorage;
 use App\HttpMethods;
+use App\Exceptions\NotFoundException;
+use App\JsonResponse;
 
 
 $todoStorage = new JsonStorage('data.json');
@@ -19,4 +21,10 @@ $api->add_route(HttpMethods::POST, '/todos', [$todoController, 'createTodo']);
 $api->add_route(HttpMethods::PUT, '/todos/:id', [$todoController, 'editTodo']);
 $api->add_route(HttpMethods::DELETE, '/todos/:id', [$todoController, 'deleteTodo']);
 
-$api->run();
+
+
+try {
+    $api->run();
+} catch (NotFoundException $e) {
+    JsonResponse::notFound();
+}

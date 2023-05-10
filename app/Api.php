@@ -32,12 +32,14 @@ class Api
         $method_routes = $this->routes[$request->get_method()];
 
         foreach ($method_routes as $route) {
-            if (preg_match('/' . preg_quote($this->base_path, '/') . $route . '/',
+            if (preg_match('/' . preg_quote($this->base_path, '/') . $route. '/',
                 $request->get_uri(), $matches)) {
+
                 array_shift($matches);
 
                 $callback = $route->getCallback();
                 if ($route->hasParams()) {
+
                     $params  = array_combine(array_values($route->getParams()), $matches);
                     $request->set_params($params);
                 }
@@ -46,6 +48,8 @@ class Api
             }
         }
 
+        return JsonResponse::methodNotAllowed();
     }
+
 
 }
